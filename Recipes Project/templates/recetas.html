@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Todas las Recetas</h1>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for receta in recetas %}
+    <div class="col">
+        <div class="card h-100">
+            {% if receta.fotos %}
+            <img src="{{ receta.fotos[0].url_imagen }}" class="card-img-top" alt="{{ receta.titulo }}">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ receta.titulo }}</h5>
+                <p class="card-text">Por: {{ receta.usuario.username }}</p>
+                <p class="card-text">
+                    <small class="text-muted">
+                        Tiempo de preparación: {{ receta.tiempo_prep }} minutos
+                    </small>
+                </p>
+                <a href="{{ url_for('ver_receta', receta_id=receta.id) }}" class="btn btn-primary">Ver Receta</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %} 

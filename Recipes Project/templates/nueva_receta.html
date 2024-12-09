@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="text-center">Nueva Receta</h2>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="titulo" class="form-label">Título</label>
+                        <input type="text" class="form-control" id="titulo" name="titulo" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tiempo_prep" class="form-label">Tiempo de Preparación (minutos)</label>
+                        <input type="number" class="form-control" id="tiempo_prep" name="tiempo_prep" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="porciones" class="form-label">Porciones</label>
+                        <input type="number" class="form-control" id="porciones" name="porciones" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="instrucciones" class="form-label">Instrucciones</label>
+                        <textarea class="form-control" id="instrucciones" name="instrucciones" rows="10" required></textarea>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Crear Receta</button>
+                        {% if receta and receta.usuario_id == session['usuario_id'] %}
+                            <a href="{{ url_for('editar_receta', id=receta.id) }}" class="btn btn-secondary">Editar Receta</a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

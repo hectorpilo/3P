@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center py-5">
+    <h1 class="display-4">Bienvenido al Sistema de Recetas</h1>
+    <p class="lead">Comparte y descubre recetas increíbles</p>
+    
+    {% if current_user.is_authenticated %}
+        <div class="mt-4">
+            <a href="{{ url_for('nueva_receta') }}" class="btn btn-primary btn-lg">Crear Nueva Receta</a>
+            <a href="{{ url_for('recetas') }}" class="btn btn-secondary btn-lg">Ver Recetas</a>
+        </div>
+    {% else %}
+        <div class="mt-4">
+            <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Iniciar Sesión</a>
+            <a href="{{ url_for('registro') }}" class="btn btn-success btn-lg">Registrarse</a>
+        </div>
+    {% endif %}
+</div>
+
+{% if recetas_recientes %}
+<div class="mt-5">
+    <h2>Recetas Recientes</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for receta in recetas_recientes %}
+        <div class="col">
+            <div class="card h-100">
+                {% if receta.fotos %}
+                <img src="{{ receta.fotos[0].url_imagen }}" class="card-img-top" alt="{{ receta.titulo }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ receta.titulo }}</h5>
+                    <p class="card-text">Por: {{ receta.usuario.username }}</p>
+                    <a href="{{ url_for('ver_receta', receta_id=receta.id) }}" class="btn btn-primary">Ver Receta</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %} 

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title mb-0">Historial de Consumo</h2>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Calorías Totales</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for consumo in consumos %}
+                    <tr>
+                        <td>{{ consumo.fecha.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ consumo.producto.nombre }}</td>
+                        <td>{{ consumo.cantidad }} {{ consumo.producto.unidad_medida }}</td>
+                        <td>{{ (consumo.cantidad * consumo.producto.calorias) | round(2) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} 

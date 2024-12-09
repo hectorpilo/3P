@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1>{{ receta.titulo }}</h1>
+                <!-- Debug temporal -->
+                <div style="display:none">
+                    Usuario actual: {{ usuario_actual }}<br>
+                    Usuario de receta: {{ receta.usuario_id }}
+                </div>
+                
+                {% if usuario_actual == receta.usuario_id %}
+                <div>
+                    <a href="{{ url_for('editar_receta', id=receta.id) }}" class="btn btn-outline-primary">
+                        Editar
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <p class="text-muted">
+                Por: {{ receta.usuario.username }} | 
+                Tiempo de preparación: {{ receta.tiempo_prep }} minutos | 
+                Porciones: {{ receta.porciones }}
+            </p>
+
+            {% if receta.fotos %}
+            <div class="mb-4">
+                {% for foto in receta.fotos %}
+                <img src="{{ foto.url_imagen }}" class="img-fluid mb-2" alt="{{ receta.titulo }}">
+                {% if foto.descripcion %}
+                <p class="text-muted">{{ foto.descripcion }}</p>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <h3>Ingredientes</h3>
+            
+            {% if usuario_actual == receta.usuario_id %}
+            <!-- Formulario para agregar ingredientes -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('agregar_ingrediente', receta_id=receta.id) }}" class="row g-3">
+                        <div class="col-md-4">
+                            <label for="cantidad" class="form-label">Cantidad</label>
+                            <input type="number" step="0.01" class="form-control" id="cantidad" name="cantidad" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="unidad_medida" class="form-label">Unidad</label>
+                            <select class="form-select" id="unidad_medida" name="unidad_medida" required>
+                                <option value="unidad">Unidad</option>
+                                <option value="gramos">Gramos</option>
+                                <option value="kilos">Kilos</option>
+                                <option value="ml">Mililitros</option>
+                                <option value="litros">Litros</option>
+                                <option value="cucharada">Cucharada</option>
+                                <option value="cucharadita">Cucharadita</option>
+                                <option value="taza">Taza</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="nombre" class="form-label">Ingrediente</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Agregar Ingrediente</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Lista de ingredientes -->
+            <ul class="list-group mb-4">
+                {% for ingrediente in receta.ingredientes %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ ingrediente.cantidad }} {{ ingrediente.unidad_medida }} de {{ ingrediente.nombre }}
+                    {% if usuario_actual == receta.usuario_id %}
+                    <form method="POST" action="{{ url_for('eliminar_ingrediente', receta_id=receta.id, ingrediente_id=ingrediente.id) }}" style="display: inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este ingrediente?')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+
+            <h3>Instrucciones</h3>
+            <div class="mb-4">
+                {{ receta.instrucciones|safe }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
